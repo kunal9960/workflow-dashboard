@@ -356,7 +356,7 @@ with bottom_right_column:
     plot_bottom_right()
 
 st.markdown(
-    "[![GitHub Badge](https://img.shields.io/badge/GitHub-181717?logo=github&logoColor=fff&style=flat)](https://github.com/kunal9960/workflow_dashboard)&nbsp;&nbsp;" +
+    "[![GitHub Badge](https://img.shields.io/badge/GitHub-181717?logo=github&logoColor=fff&style=flat)](https://github.com/kunal9960/workflow-dashboard)&nbsp;&nbsp;" +
     "[![Streamlit Badge](https://img.shields.io/badge/Streamlit-FF4B4B?logo=streamlit&logoColor=fff&style=flat)](https://workflow-dashboard-kunal.streamlit.app/)")
 
 
