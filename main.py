@@ -130,10 +130,10 @@ def plot_top_right():
         y="sales",
         color="Scenario",
         barmode="group",
-        text="sales",  # Display sales value on bars
+        text="sales",
         title="Sales for Year 2023",
         height=400,
-        color_discrete_map={"Budget": "rgba(148, 0, 211, 0.2)", "Forecast": "rgba(255, 255, 150, 0.5)"}  # Assign colors directly
+        color_discrete_map={"Budget": "rgba(148, 0, 211, 0.2)", "Forecast": "rgba(255, 255, 150, 0.5)"}
     )
 
     fig.update_traces(
@@ -176,9 +176,6 @@ def plot_bottom_left():
 
 
 def plot_bottom_right():
-    # Assuming you have multiple accounts with different names in your sales_data DataFrame
-
-    # Your SQL query and data retrieval here...
     sales_data = duckdb.sql(
         f"""
         WITH sales_data AS (
@@ -206,19 +203,16 @@ def plot_bottom_right():
         """
     ).df()
 
-    # Lighter color palette for the bars
     color_palette = [
-        "#ADD8E6",  # Light blue
-        "#FFD700",  # Gold
-        "#FFA07A",  # Light salmon
-        "#98FB98",  # Pale green
-        "#FFB6C1",  # Light pink
-        "#87CEFA",  # Light sky blue
-        "#FFA500",  # Orange
-        "#F0E68C",  # Khaki
+        "#ADD8E6",
+        "#FFD700",
+        "#FFA07A",
+        "#98FB98",
+        "#FFB6C1",
+        "#87CEFA",
+        "#FFA500",
+        "#F0E68C",
     ]
-
-    # Generate color_discrete_map dynamically based on the accounts in sales_data
     color_discrete_map = {account: color_palette[i % len(color_palette)] for i, account in
                           enumerate(sales_data['Account'].unique())}
 
@@ -231,7 +225,7 @@ def plot_bottom_right():
         color_discrete_map=color_discrete_map
     )
 
-    fig.update_layout(plot_bgcolor="white")  # Set plot background color to white for a light theme
+    fig.update_layout(plot_bgcolor="white")
 
     st.plotly_chart(fig, use_container_width=True)
 
@@ -306,7 +300,7 @@ def plot_metric_with_graph(label, value, prefix="", suffix="", graph_data=None, 
     )
     st.plotly_chart(fig, use_container_width=True)
 
-# Example usage in your Streamlit columns:
+
 with top_left_column:
     column_1, column_2, column_3, column_4 = st.columns(4)
     with column_1:
@@ -337,7 +331,7 @@ with top_left_column:
             suffix=" %",
             graph_data=random.sample(range(0, 101), 30),
             graph_color="rgba(255, 43, 43, 0.2)",
-            title_size=18,  # Adjusted title size for Equity Ratio
+            title_size=18,
         )
         plot_gauge(7, "#FF2B2B", " days", "Out Stock", 31)
 
@@ -349,7 +343,7 @@ with top_left_column:
             suffix=" %",
             graph_data=random.sample(range(0, 101), 30),
             graph_color="rgba(43, 131, 59, 0.2)",
-            title_size=18,  # Adjusted title size for Debt Equity
+            title_size=18,
         )
         plot_gauge(28, "#29B09D", " days", "Delay", 31)
 with top_right_column:
@@ -363,7 +357,7 @@ with bottom_right_column:
 
 st.markdown(
     "[![GitHub Badge](https://img.shields.io/badge/GitHub-181717?logo=github&logoColor=fff&style=flat)](https://github.com/kunal9960/workflow_dashboard)&nbsp;&nbsp;" +
-    "[![Streamlit Badge](https://img.shields.io/badge/Streamlit-FF4B4B?logo=streamlit&logoColor=fff&style=flat)](https://stock-dashboard-kunal.streamlit.app/)")
+    "[![Streamlit Badge](https://img.shields.io/badge/Streamlit-FF4B4B?logo=streamlit&logoColor=fff&style=flat)](https://workflow-dashboard-kunal.streamlit.app/)")
 
 
 ft = """
