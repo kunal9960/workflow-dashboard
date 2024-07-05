@@ -1,6 +1,6 @@
 # Workflow Sales Dashboard 📉
 
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://stocks-dashboard-kunaal.streamlit.app/)
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://workflow-dashboard-kunal.streamlit.app/)
 [![Project Status: Active](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 ![uptime](https://img.shields.io/badge/uptime-100%25-brightgreen)
 [![Made With Love](https://img.shields.io/badge/Made%20With-Love-orange.svg)](https://github.com/kunal9960)
