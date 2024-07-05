@@ -133,7 +133,7 @@ def plot_top_right():
         text="sales",
         title="Sales for Year 2023",
         height=400,
-        color_discrete_map={"Budget": "rgba(148, 0, 211, 0.2)", "Forecast": "rgba(255, 255, 150, 0.5)"}
+        color_discrete_map={"Budget": "rgba(128, 128, 128, 0.3)", "Forecast": "rgba(138, 43, 226, 0.3)"}
     )
 
     fig.update_traces(
@@ -169,7 +169,7 @@ def plot_bottom_left():
         markers=True,
         text="sales",
         title="Monthly Budget vs Forecast 2023",
-        color_discrete_map={"Budget": "rgba(255, 99, 71, 0.5)", "Forecast": "rgba(135, 206, 235, 0.5)"}
+        color_discrete_map={"Budget": "rgba(0, 104, 201, 0.2)", "Forecast": "rgba(135, 206, 235, 0.5)"}
     )
     fig.update_traces(textposition="top center")
     st.plotly_chart(fig, use_container_width=True)
