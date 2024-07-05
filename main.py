@@ -1,13 +1,15 @@
 import random
 import duckdb
+import numpy as np
 import pandas as pd
 import streamlit as st
 import plotly.express as px
 import plotly.graph_objects as go
 
-st.set_page_config(page_title="Sales Dashboard", page_icon=":bar_chart:", layout="wide")
 
-# Layout and description
+st.set_page_config(page_title="Sales Dashboard", page_icon="dashboard.png", layout="wide")
+
+
 col1, col2 = st.columns([1, 2])
 with col1:
     st.write("<h2><b>📉 <u>Workflow Sales Dashboard</b></h2>", unsafe_allow_html=True)
@@ -17,6 +19,7 @@ with col1:
     )
 with col2:
     st.image("header.gif", width=255)
+st.divider()
 
 st.write("<h2><b>⚙️ <u>Configuration</b></h2>", unsafe_allow_html=True)
 uploaded_file = st.file_uploader("Choose a file")
@@ -31,7 +34,7 @@ def load_data(path: str):
 if uploaded_file is None:
     default_path = "Financial Data Clean.xlsx"
     df = load_data(default_path)
-    st.info("Using default sales data. Upload a file to use your own data.", icon="ℹ️")
+    st.info("Using a random Sales Data for an example, Upload a file to use your own data 👇", icon="ℹ️")
 else:
     df = load_data(uploaded_file)
 
@@ -120,19 +123,23 @@ def plot_top_right():
         SELECT * FROM aggregated_sales
         """
     ).df()
+
     fig = px.bar(
         sales_data,
         x="business_unit",
         y="sales",
         color="Scenario",
         barmode="group",
-        text_auto=".2s",
+        text="sales",  # Display sales value on bars
         title="Sales for Year 2023",
         height=400,
+        color_discrete_map={"Budget": "rgba(148, 0, 211, 0.2)", "Forecast": "rgba(255, 255, 150, 0.5)"}  # Assign colors directly
     )
+
     fig.update_traces(
         textfont_size=12, textangle=0, textposition="outside", cliponaxis=False
     )
+
     st.plotly_chart(fig, use_container_width=True)
 
 
@@ -141,7 +148,7 @@ def plot_bottom_left():
         f"""
         WITH sales_data AS (
             SELECT 
-            Scenario,{','.join(all_months)} 
+                Scenario,{','.join(all_months)} 
             FROM df 
             WHERE Year='2023' 
             AND Account='Sales'
@@ -162,12 +169,16 @@ def plot_bottom_left():
         markers=True,
         text="sales",
         title="Monthly Budget vs Forecast 2023",
+        color_discrete_map={"Budget": "rgba(255, 99, 71, 0.5)", "Forecast": "rgba(135, 206, 235, 0.5)"}
     )
     fig.update_traces(textposition="top center")
     st.plotly_chart(fig, use_container_width=True)
 
 
 def plot_bottom_right():
+    # Assuming you have multiple accounts with different names in your sales_data DataFrame
+
+    # Your SQL query and data retrieval here...
     sales_data = duckdb.sql(
         f"""
         WITH sales_data AS (
@@ -194,19 +205,108 @@ def plot_bottom_right():
         SELECT * FROM aggregated_sales
         """
     ).df()
+
+    # Lighter color palette for the bars
+    color_palette = [
+        "#ADD8E6",  # Light blue
+        "#FFD700",  # Gold
+        "#FFA07A",  # Light salmon
+        "#98FB98",  # Pale green
+        "#FFB6C1",  # Light pink
+        "#87CEFA",  # Light sky blue
+        "#FFA500",  # Orange
+        "#F0E68C",  # Khaki
+    ]
+
+    # Generate color_discrete_map dynamically based on the accounts in sales_data
+    color_discrete_map = {account: color_palette[i % len(color_palette)] for i, account in
+                          enumerate(sales_data['Account'].unique())}
+
     fig = px.bar(
         sales_data,
         x="Year",
         y="sales",
         color="Account",
         title="Actual Yearly Sales Per Account",
+        color_discrete_map=color_discrete_map
     )
+
+    fig.update_layout(plot_bgcolor="white")  # Set plot background color to white for a light theme
+
     st.plotly_chart(fig, use_container_width=True)
 
+
+st.divider()
+st.write("<h2><b>🚀 <u>Dashboard Preview</b></h2>", unsafe_allow_html=True)
 
 top_left_column, top_right_column = st.columns((2, 1))
 bottom_left_column, bottom_right_column = st.columns(2)
 
+
+def plot_metric(label, value, prefix="", suffix="", show_graph=False, color_graph="", title_size=16):
+    fig = go.Figure()
+    fig.add_trace(
+        go.Indicator(
+            value=value,
+            gauge={"axis": {"visible": False}},
+            number={"prefix": prefix, "suffix": suffix, "font.size": 25},
+            title={"text": label, "font": {"size": title_size}},
+        )
+    )
+    if show_graph:
+        fig.add_trace(
+            go.Scatter(
+                y=random.sample(range(0, 101), 30),
+                hoverinfo="skip",
+                fill="tozeroy",
+                fillcolor=color_graph,
+                line={"color": color_graph},
+            )
+        )
+    fig.update_xaxes(visible=False, fixedrange=True)
+    fig.update_yaxes(visible=False, fixedrange=True)
+    fig.update_layout(
+        margin=dict(t=30, b=0),
+        showlegend=False,
+        plot_bgcolor="white",
+        height=160,
+    )
+    st.plotly_chart(fig, use_container_width=True)
+
+
+def plot_metric_with_graph(label, value, prefix="", suffix="", graph_data=None, graph_color="", title_size=10):
+    fig = go.Figure()
+    fig.add_trace(
+        go.Indicator(
+            value=value,
+            gauge={"axis": {"visible": False}},
+            number={"prefix": prefix, "suffix": suffix, "font.size": 25},
+            title={"text": label, "font": {"size": title_size}},
+        )
+    )
+    if graph_data is not None:
+        fig.add_trace(
+            go.Scatter(
+                x=np.arange(len(graph_data)),
+                y=graph_data,
+                mode="lines",
+                line={"color": graph_color},
+                fill="tozeroy",
+                fillcolor=graph_color,
+                hoverinfo="skip",
+            )
+        )
+    fig.update_xaxes(visible=False, fixedrange=True)
+    fig.update_yaxes(visible=False, fixedrange=True)
+    fig.update_layout(
+        margin=dict(t=30, b=0),
+        showlegend=False,
+        plot_bgcolor="white",
+        height=160,
+    )
+    st.plotly_chart(fig, use_container_width=True)
+
+# Example usage in your Streamlit columns:
 with top_left_column:
     column_1, column_2, column_3, column_4 = st.columns(4)
     with column_1:
@@ -226,16 +326,32 @@ with top_left_column:
             prefix="$",
             suffix="",
             show_graph=True,
-            color_graph="rgba(255, 43, 43, 0.2)",
+            color_graph="rgba(255, 165, 0, 0.2)",
         )
         plot_gauge(10, "#FF8700", " days", "In Stock", 31)
     with column_3:
-        plot_metric("Equity Ratio", 75.38, prefix="", suffix=" %", show_graph=False)
+        plot_metric_with_graph(
+            "Equity Ratio",
+            75.38,
+            prefix="",
+            suffix=" %",
+            graph_data=random.sample(range(0, 101), 30),
+            graph_color="rgba(255, 43, 43, 0.2)",
+            title_size=18,  # Adjusted title size for Equity Ratio
+        )
         plot_gauge(7, "#FF2B2B", " days", "Out Stock", 31)
-    with column_4:
-        plot_metric("Debt Equity", 1.10, prefix="", suffix=" %", show_graph=False)
-        plot_gauge(28, "#29B09D", " days", "Delay", 31)
 
+    with column_4:
+        plot_metric_with_graph(
+            "Debt Equity",
+            1.10,
+            prefix="",
+            suffix=" %",
+            graph_data=random.sample(range(0, 101), 30),
+            graph_color="rgba(43, 131, 59, 0.2)",
+            title_size=18,  # Adjusted title size for Debt Equity
+        )
+        plot_gauge(28, "#29B09D", " days", "Delay", 31)
 with top_right_column:
     plot_top_right()
 
@@ -244,3 +360,55 @@ with bottom_left_column:
 
 with bottom_right_column:
     plot_bottom_right()
+
+st.markdown(
+    "[![GitHub Badge](https://img.shields.io/badge/GitHub-181717?logo=github&logoColor=fff&style=flat)](https://github.com/kunal9960/workflow_dashboard)&nbsp;&nbsp;" +
+    "[![Streamlit Badge](https://img.shields.io/badge/Streamlit-FF4B4B?logo=streamlit&logoColor=fff&style=flat)](https://stock-dashboard-kunal.streamlit.app/)")
+
+
+ft = """
+<style>
+a:link , a:visited{
+color: #BFBFBF;  /* theme's text color hex code at 75 percent brightness*/
+background-color: transparent;
+text-decoration: none;
+}
+
+a:hover,  a:active {
+color: #0283C3; /* theme's primary color*/
+background-color: transparent;
+text-decoration: underline;
+}
+
+#page-container {
+  position: relative;
+  min-height: 10vh;
+}
+
+footer{
+    visibility:hidden;
+}
+
+.footer {
+position: relative;
+left: 0;
+top:150px;
+bottom: 0;
+width: 100%;
+background-color: transparent;
+color: #808080;
+text-align: left;
+}
+</style>
+
+<div id="page-container">
+
+<div class="footer">
+<p style='font-size: 1em;'>Made with <a style='display: inline; text-align: left;' href="https://streamlit.io/" target="_blank">Streamlit</a><br 'style= top:3px;'>
+with <img src="https://em-content.zobj.net/source/skype/289/red-heart_2764-fe0f.png" alt="heart" height= "10"/><a style='display: inline; text-align: left;' href="https://github.com/kunal9960" target="_blank"> by Kunal</a>
+<a style='display: inline; text-align: left;'>© Copyright 2024</a></p>
+</div>
+
+</div>
+"""
+st.write(ft, unsafe_allow_html=True)
