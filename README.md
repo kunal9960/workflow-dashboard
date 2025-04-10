@@ -9,6 +9,7 @@ This project creates a Sales Dashboard using Streamlit, Plotly and DuckDB, featu
 
 <img src="https://github.com/kunal9960/workflow_dashboard/blob/master/dashboard%20header.png" width="700">
 
+---
 
 ## Features
 
@@ -17,6 +18,7 @@ This project creates a Sales Dashboard using Streamlit, Plotly and DuckDB, featu
 - Detailed analysis of budget vs. forecast.
 - Visual representation of sales by business unit and scenario.
 
+---
 
 ## Requirements
 
@@ -27,6 +29,7 @@ Install using ```requirements.txt```
 - Pandas
 - DuckDB
 
+---
 
 ## Setup
 
@@ -51,6 +54,7 @@ Install using ```requirements.txt```
     
 4. **Upload your own data file or use the default dataset provided.**
 
+---
 
 ## Usage
 
@@ -63,11 +67,13 @@ Upload your own sales data file or use the default dataset to customize the dash
 3. **Dashboard Preview:**
 View visualizations such as bar charts for yearly sales, line charts for monthly budget vs. forecast, and bar charts for yearly sales per account.
 
+---
 
 ## Contributing
 
 Contributions are welcome! If you have any ideas for improvements or new features, feel free to fork the repository and submit a pull request. You can also open an issue to report bugs or suggest enhancements.
 
+---
 
 ## Acknowledgments
 
